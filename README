@@ -1,0 +1,47 @@
+			_         ______    ______    _    _____
+		       | ||      |  ____|| |  __  || | || |  ___||
+		       | ||      | ||__    | ||-| || |_|| | |___
+		       | ||      |  ___||  | || | ||  --  |___  ||
+		       | ||___   | ||___   | ||_| ||       ___| ||
+		       |______|| |______|| |______||      |_____||
+			-------   --------  --------       -------
+			 ========================================
+
+README
+	folder contents: 
+		myshell.c (implementation of basic shell in C)
+		Makefile (makefile for myshell.c)
+		README (this)
+
+	description:
+		retrieve user input into buffer with fgets()
+		tokenise with pipes as delimiters to separate commands with strtok()
+		check for I/O redirection and if process will run in the background with strchr()
+		create child processes for each token with fork();
+		retokenise each command and format for execvp with strtok()	
+		redirect inputs, outputs, and pipe using dup2() and pipe() variables
+		execute command with execvp()
+		have parent wait for child processes before next iteration of the loop with waitpid()
+		handle signal processes with signal() and a signal catcher to catch exit codes 
+		repeat until user inputs ^D into the input buffer
+		
+
+BIBLIOGRAPHY
+	find below a list of the resources I used for research during the writing of myshell.c:
+		Youtube Playlist: Write Your Own Shell, by Jess-Inspired
+		Linux Man Pages for waitpid(), exec(), fork(), fgets(), pipe(), close(), and especially dup2()
+		Geeks for Geeks pages explaining Child and Parent Processes, Background Processes , Zombie Processes,
+		GNU.org C reference manual for strtok() and strstr()
+		IBM Documentation for C shell
+		Code Vault's Youtube video on Unix C commands
+
+PARTS WHICH GAVE ME A MIGRAINE
+ 	- I spent the better part of 2 days trying to figure out why piping gave me bad file
+	  descriptor errors: The amount of times each end of each pipe is closed was something
+	  that not intuitive from the research I did on the man pages. I managed to find a way 
+	  close each each once per loop, which solved most of my errors.
+
+	- This issue with pipes also messed up how the parent process would wait for the children
+	  processes. The behaviour when submitting my code to text cases appeared have the parent
+	  wait forever for the last child or not at all. This was however caused by not properly 
+	  closing the last pipe. 
